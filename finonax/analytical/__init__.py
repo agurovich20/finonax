@@ -1,3 +1,8 @@
+from finonax.analytical._heston import (
+    heston_characteristic_function,
+    heston_call_price,
+    heston_put_price,
+)
 from finonax.analytical._merton import merton_call_price, merton_put_price
 from finonax.analytical._black_scholes import (
     bs_call_price,
@@ -13,6 +18,9 @@ from finonax.analytical._black_scholes import (
 )
 
 __all__ = [
+    "heston_characteristic_function",
+    "heston_call_price",
+    "heston_put_price",
     "merton_call_price",
     "merton_put_price",
     "bs_call_price",

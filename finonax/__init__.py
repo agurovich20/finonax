@@ -5,6 +5,8 @@ from finonax.stepper import BlackScholes, Merton
 from finonax.analytical import (
     bs_call_delta,
     bs_call_price,
+    heston_call_price,
+    heston_put_price,
     bs_call_rho,
     bs_call_theta,
     bs_gamma,
@@ -23,6 +25,8 @@ __all__ = [
     "Merton",
     "calibrate_iv",
     "calibrate_merton",
+    "heston_call_price",
+    "heston_put_price",
     "delta",
     "gamma",
     "vega",
