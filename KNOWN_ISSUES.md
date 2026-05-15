@@ -165,3 +165,37 @@ needed once measurements are taken.
 **When to revisit**: M2.3 (parameter-grid Greek validation),
 when many measurements at varying magnitudes will make the
 case for relative tolerance more compelling.
+
+## HestonStepper uses forward Euler time stepping
+
+**File**: `finonax/stepper/_heston.py`
+
+**Issue**: The HestonStepper uses explicit forward Euler
+integration in tau. This is conditionally stable, with the
+stability bound
+
+    dtau <= 4 / (v_max * k_max^2)
+
+where k_max = pi * num_x / (2 * x_half_extent) is the highest
+spatial wavenumber on the log-spot axis. For canonical equity
+parameters at num_x=512, x_half_extent=3.0, this caps v_max
+at roughly 0.22 for num_steps=2000.
+
+This limits HestonStepper to moderate-volatility regimes. For
+high vol-of-vol calibration or long maturities where v_max
+must be larger, num_steps must scale as v_max * num_x^2,
+which becomes impractical for realistic parameter ranges.
+
+The current test parameters (v_max=0.20, num_steps=2000) sit
+near the stability edge: they pass cleanly but any change
+that increases v_max, num_x, or dtau will break them.
+
+**Fix options**: implicit time stepping (Crank-Nicolson in tau)
+or ADI (alternating direction implicit) splitting. Both add
+significant implementation complexity and are deferred until
+a use case requires them.
+
+**When to revisit**: M3c.4 (Heston calibration) may require
+this if optimization wanders into high-xi parameter regions
+that demand larger v_max for accuracy. Watch for instability
+during calibration; if it appears, switch to an implicit scheme.
